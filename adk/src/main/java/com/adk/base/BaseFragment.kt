@@ -30,7 +30,21 @@ abstract class BaseFragment<T : BaseViewModel> : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         this.rootView = view
         initView()
+        initDefaultObserver()
         initObserver()
+    }
+
+    private fun initDefaultObserver() {
+        viewModel.showLoadingLiveData.observe(viewLifecycleOwner, {
+            if (it) {
+                showLoading()
+            } else {
+                dismissLoading()
+            }
+        })
+        viewModel.toastLiveData.observe(viewLifecycleOwner, {
+            toastMsg(it)
+        })
     }
 
     abstract fun getLayoutId(): Int
@@ -39,4 +53,9 @@ abstract class BaseFragment<T : BaseViewModel> : Fragment() {
 
     open fun initObserver() {}
 
+    open fun showLoading() {}
+
+    open fun dismissLoading() {}
+
+    open fun toastMsg(msg: String) {}
 }

@@ -25,7 +25,21 @@ abstract class BaseActivity<T : BaseViewModel> : AppCompatActivity() {
         setContentView(getLayoutId())
         parseIntent()
         initView()
+        initDefaultObserver()
         initObserver()
+    }
+
+    private fun initDefaultObserver(){
+        viewModel.showLoadingLiveData.observe(this, {
+            if (it) {
+                showLoading()
+            } else {
+                dismissLoading()
+            }
+        })
+        viewModel.toastLiveData.observe(this, {
+            toastMsg(it)
+        })
     }
 
     abstract fun getLayoutId(): Int
@@ -35,4 +49,10 @@ abstract class BaseActivity<T : BaseViewModel> : AppCompatActivity() {
     open fun initView() {}
 
     open fun initObserver() {}
+
+    open fun showLoading() {}
+
+    open fun dismissLoading() {}
+
+    open fun toastMsg(msg: String){}
 }
