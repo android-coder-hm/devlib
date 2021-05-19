@@ -1,0 +1,3 @@
+rootProject.name = "DevLib"
+include ':app'
+include ':adk'
