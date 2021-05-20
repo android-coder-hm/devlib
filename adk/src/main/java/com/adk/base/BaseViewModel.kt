@@ -3,6 +3,7 @@ package com.adk.base
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.adk.logError
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -30,6 +31,7 @@ abstract class BaseViewModel : ViewModel() {
                 bloc()
                 changeLoadingStatus(showLoading, false)
             } catch (e: Exception) {
+                logError("BaseViewModel", "viewmodel中操作出现异常:${e.localizedMessage}")
                 changeLoadingStatus(showLoading, false)
                 toastLiveData.postValue(e.localizedMessage)
                 errorFun?.invoke(e)
