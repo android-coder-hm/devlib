@@ -16,6 +16,7 @@ object GlobalConfig {
     fun init(context: Context, isDebug: Boolean = true, okHttpClient: OkHttpClient = getDefaultOkHttpClient()) {
         this.appContext = context
         this.isDebug = isDebug
+        this.okHttpClient = okHttpClient
     }
 
     fun isDebugModel() = isDebug
