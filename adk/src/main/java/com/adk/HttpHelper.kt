@@ -1,5 +1,6 @@
 package com.adk
 
+import okhttp3.FormBody
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.OkHttpClient
@@ -45,6 +46,20 @@ fun sendGetRequest(url: String): String = executeRequest(Request.Builder().url(u
 fun sendPostJsonRequest(url: String, jsonData: String): String {
     val requestBody = jsonData.toRequestBody("application/json; charset=utf-8".toMediaTypeOrNull())
     val request = Request.Builder().url(url).post(requestBody).build()
+    return executeRequest(request)
+}
+
+/**
+ * 发送POST表单请求
+ * @param url 请求地址
+ * @param params 请求参数
+ */
+fun sendPostFormRequest(url: String, params: Map<String, String>): String {
+    val formBodyBuilder = FormBody.Builder()
+    params.forEach {
+        formBodyBuilder.add(it.key, it.value)
+    }
+    val request = Request.Builder().url(url).post(formBodyBuilder.build()).build()
     return executeRequest(request)
 }
 
