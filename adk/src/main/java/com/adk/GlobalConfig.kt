@@ -1,6 +1,7 @@
 package com.adk
 
 import android.content.Context
+import android.content.SharedPreferences
 import okhttp3.OkHttpClient
 
 /**
@@ -24,4 +25,8 @@ object GlobalConfig {
     fun getAppContext() = this.appContext
 
     fun getOkHttpClient() = this.okHttpClient
+
+    fun getAppShare(): SharedPreferences {
+        return appContext.getSharedPreferences(appContext.packageName, Context.MODE_PRIVATE)
+    }
 }

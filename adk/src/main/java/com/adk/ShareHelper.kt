@@ -1,14 +1,15 @@
 package com.adk
 
 import android.content.Context
+import java.io.Serializable
 
 /**
  * share键值对存储工具
  * 后面会废弃采用 最新  dataSource 存储
  */
 
-fun putShareValue(shareFileName: String, keyName: String, value: Any, model: Int = Context.MODE_PRIVATE) {
-    with(GlobalConfig.getAppContext().getSharedPreferences(shareFileName, model).edit()) {
+fun putShare(keyName: String, value: Any) {
+    with(GlobalConfig.getAppShare().edit()) {
         when (value) {
             is Long -> putLong(keyName, value)
             is Int -> putInt(keyName, value)
@@ -20,9 +21,8 @@ fun putShareValue(shareFileName: String, keyName: String, value: Any, model: Int
     }
 }
 
-@Suppress("IMPLICIT_CAST_TO_ANY")
-inline fun <reified T> getShareValue(shareFileName: String, keyName: String, defaultValue: T, model: Int = Context.MODE_PRIVATE): T {
-    with(GlobalConfig.getAppContext().getSharedPreferences(shareFileName, model)) {
+inline fun <reified T> getShare(keyName: String, defaultValue: T): T {
+    with(GlobalConfig.getAppShare()) {
         return when (T::class) {
             Int::class -> getInt(keyName, if (defaultValue is Int) defaultValue else 0)
             String::class -> getString(keyName, if (defaultValue is String) defaultValue else "")

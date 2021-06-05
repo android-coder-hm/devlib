@@ -15,6 +15,16 @@ fun getStringRes(@StringRes stringResId: Int): String = GlobalConfig.getAppConte
 
 
 /**
+ * 获取字符串参数 带有参数
+ * @param stringResId  字符资源ID
+ * @param params 参数
+ */
+fun getStringResWithArgs(@StringRes stringResId: Int, vararg params: Any): String {
+    return GlobalConfig.getAppContext().getString(stringResId, params)
+}
+
+
+/**
  * 获取颜色资源
  * @param colorResId 颜色资源ID
  */
@@ -31,6 +41,5 @@ fun getColorByString(colorString: String) = Color.parseColor(colorString)
  * 获取drawable资源
  * @param drawableRes drawable资源ID
  */
-fun getDrawableRes(@DrawableRes drawableRes: Int): Drawable? =
-    ContextCompat.getDrawable(GlobalConfig.getAppContext(), drawableRes)
+fun getDrawableRes(@DrawableRes drawableRes: Int): Drawable? = ContextCompat.getDrawable(GlobalConfig.getAppContext(), drawableRes)
 
