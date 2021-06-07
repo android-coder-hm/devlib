@@ -3,6 +3,8 @@ package com.adk
 import android.content.Intent
 import androidx.core.content.FileProvider
 import java.io.File
+import java.text.SimpleDateFormat
+import java.util.*
 
 /**
  * 文件存储
@@ -51,6 +53,14 @@ fun shareTextBySystem(textData: String) {
     intent.putExtra(Intent.EXTRA_TEXT, textData) // 分享的内容
     intent.type = "text/plain"
     GlobalConfig.getAppContext().startActivity(intent)
+}
+
+/**
+ * 时间格式化
+ */
+fun formatDate(mills: Long, format: String): String {
+    val simpleDateFormat = SimpleDateFormat(format, Locale.CHINA)
+    return simpleDateFormat.format(Date(mills))
 }
 
 
