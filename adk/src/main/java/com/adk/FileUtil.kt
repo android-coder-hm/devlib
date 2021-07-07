@@ -1,8 +1,12 @@
 package com.adk
 
 import android.content.Intent
+import android.media.MediaMetadataRetriever
+import android.net.Uri
+import android.os.Build
 import androidx.core.content.FileProvider
 import java.io.File
+import java.lang.Exception
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -36,12 +40,36 @@ fun getAppCacheRootFile(dirName: String): File {
  * 调用系统分享文件
  */
 fun shareFileBySystem(filePath: String) {
+    val shareFile = File(filePath)
+    if (!shareFile.exists()) {
+        return
+    }
     val intent = Intent(Intent.ACTION_SEND)
-    intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-    val uri = FileProvider.getUriForFile(GlobalConfig.getAppContext(), "${GlobalConfig.getAppContext().packageName}.fileprovider", File(filePath))
+    val uri: Uri?
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+        uri = FileProvider.getUriForFile(GlobalConfig.getAppContext(), "${GlobalConfig.getAppContext().packageName}.fileprovider", shareFile)
+        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+    } else {
+        uri = Uri.fromFile(shareFile)
+    }
+
+    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+    intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
     intent.putExtra(Intent.EXTRA_STREAM, uri)
-    intent.type = "*/*"
+    intent.type = getMimeType(filePath)
     GlobalConfig.getAppContext().startActivity(intent)
+}
+
+private fun getMimeType(filePath: String): String {
+    val mediaMetadataRetriever = MediaMetadataRetriever()
+    var mime = "*/*"
+    return try {
+        mediaMetadataRetriever.setDataSource(filePath)
+        mime = mediaMetadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_MIMETYPE) ?: "*/*"
+        mime
+    } catch (e: Exception) {
+        mime
+    }
 }
 
 /**
